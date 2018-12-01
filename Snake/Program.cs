@@ -41,29 +41,28 @@ namespace Snake
             SetCursorPosition(WindowWidth / 2 - "Press R to restart".Length / 2 + 1, WindowHeight / 2 + 2);
             Write("Press R to restart");
             while (ReadKey(true).Key != ConsoleKey.R) { /*Wait until R is pressesd*/ }
+            restart();
+        }
+
+        static void restart()
+        {
             snake = new List<int[]>();
             score = 0;
+            direction = 0;
             int[] center = { WindowWidth / 2, WindowHeight / 2 };
             snake.Add(center);
             drawBorder();
             generateApple();
             gameLoop();
-
         }
 
         static void gameLoop()
         {
             getDirection();
             updateSnake();
-            if (!isGameOver())
-            {
-                Thread.Sleep(100);
-                gameLoop();
-            }
-            else
-            {
-                gameOver();
-            }
+            Thread.Sleep(100);
+            gameLoop();
+            
         }
 
         static bool isGameOver()
@@ -72,7 +71,7 @@ namespace Snake
             {
                 return true;
             }
-            else if (snake[0][1] == 0 || snake[0][1] == WindowHeight) //hit top or bottom 
+            else if (snake[0][1] == 0 || snake[0][1] == WindowHeight-1) //hit top or bottom 
             {
                 return true;
             }
@@ -100,6 +99,8 @@ namespace Snake
                     SetCursorPosition(snake.Last<int[]>()[0], snake.Last<int[]>()[1]);
 
                     Write("  ");
+                    if (isGameOver())
+                        gameOver();
                     snake.Remove(snake.Last());
                 }
             }
